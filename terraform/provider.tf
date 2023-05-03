@@ -2,7 +2,7 @@ terraform {
   backend "gcs" {
     bucket  = "esl-efg-statefiles"
     prefix  = "terraform/state"
-    credentials = "../terraform-service-account.json"
+#    credentials = "../terraform-service-account.json"
   }
   required_providers {
     google = {
@@ -18,12 +18,12 @@ terraform {
 
 provider "google" {
   project = var.project_id
-  credentials = file("../terraform-service-account.json")
-  region = "europe-west3"
+#  credentials = file("../terraform-service-account.json")
+  region = var.region
 }
 
 provider "google-beta" {
   project = var.project_id
-  credentials = file("../terraform-service-account.json")
-  region = "europe-west3"
+#  credentials = file("../terraform-service-account.json")
+  region = var.region
 }

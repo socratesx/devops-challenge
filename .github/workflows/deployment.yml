@@ -1,12 +1,17 @@
 name: Terraform CI/CD
 
-on: [push, pull_request]
+on: [push]
+
+env:
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+  GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
 jobs:
   validate:
     name: Terraform Validate
     runs-on: ubuntu-latest
     steps:
+    - name:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Terraform Init
