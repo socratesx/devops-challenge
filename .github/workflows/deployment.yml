@@ -10,12 +10,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Terraform Init
-      run: terraform init ./terraform
+      run: cd terraform && terraform init
     - name: Validate Terraform
-      run: terraform validate ./terraform
+      run: terraform validate
     - name: Terraform Plan
       id: tf-plan
-      run: terraform plan -out=tfplan ./terraform
+      run: terraform plan -out=tfplan
   apply:
     name: Terraform Apply
     runs-on: ubuntu-latest
@@ -25,4 +25,4 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Terraform Apply
-      run: terraform apply -auto-approve tfplan
+      run: cd terraform && terraform apply -auto-approve tfplan
