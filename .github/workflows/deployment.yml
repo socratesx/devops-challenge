@@ -28,12 +28,16 @@ jobs:
         working-directory: terraform
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Terraform Init
         run: terraform init
+      - uses: benjlevesque/short-sha@v2.2
+        id: short-sha
+        with:
+          length: 6
       - name: Terraform Plan
         id: tf-plan
-        run: terraform plan -out=tfplan -var 'app_version=${GITHUB_SHA::6}'
+        run: terraform plan -out=tfplan -var 'app_version=${{steps.short-sha.outputs.sha}}'
   apply:
     name: Terraform Apply
     runs-on: ubuntu-latest
