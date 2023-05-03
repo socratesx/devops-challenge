@@ -27,6 +27,8 @@ jobs:
       run:
         working-directory: terraform
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Terraform Plan
         id: tf-plan
         run: terraform plan -out=tfplan -var 'app_version=${{ github.sha }}'
