@@ -20,9 +20,16 @@ jobs:
       run: terraform init
     - name: Validate Terraform
       run: terraform validate
-    - name: Terraform Plan
-      id: tf-plan
-      run: terraform plan -out=tfplan
+  plan:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+      steps:
+        - name: Terraform Plan
+          id: tf-plan
+          run: terraform plan -out=tfplan -var 'app_version=${{ github.sha }}'
   apply:
     name: Terraform Apply
     runs-on: ubuntu-latest
