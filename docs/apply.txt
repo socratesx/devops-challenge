@@ -1,0 +1,142 @@
+module.db_secret.random_password.password: Creating...
+module.db_secret.random_password.password: Creation complete after 0s [id=none]
+google_project_service.api["cloudresourcemanager.googleapis.com"]: Creating...
+google_project_service.api["compute.googleapis.com"]: Creating...
+google_project_service.api["run.googleapis.com"]: Creating...
+module.application_network.google_compute_network.main: Creating...
+google_project_service.api["artifactregistry.googleapis.com"]: Creating...
+google_project_service.api["secretmanager.googleapis.com"]: Creating...
+google_project_service.api["vpcaccess.googleapis.com"]: Creating...
+module.database.random_integer.zone_index: Creating...
+module.db_secret.google_secret_manager_secret.secret: Creating...
+module.app_image.google_artifact_registry_repository.app_repo: Creating...
+module.database.random_integer.zone_index: Creation complete after 0s [id=1]
+module.db_secret.google_secret_manager_secret.secret: Creation complete after 2s [id=projects/esl-efg/secrets/db_password]
+module.db_secret.google_secret_manager_secret_version.secret-version-data: Creating...
+module.db_secret.google_secret_manager_secret_iam_member.secret-access: Creating...
+module.db_secret.google_secret_manager_secret_version.secret-version-data: Creation complete after 2s [id=projects/458217262457/secrets/db_password/versions/1]
+google_project_service.api["compute.googleapis.com"]: Creation complete after 4s [id=esl-efg/compute.googleapis.com]
+google_project_service.api["cloudresourcemanager.googleapis.com"]: Creation complete after 4s [id=esl-efg/cloudresourcemanager.googleapis.com]
+google_project_service.api["artifactregistry.googleapis.com"]: Creation complete after 4s [id=esl-efg/artifactregistry.googleapis.com]
+google_project_service.api["secretmanager.googleapis.com"]: Creation complete after 4s [id=esl-efg/secretmanager.googleapis.com]
+google_project_service.api["vpcaccess.googleapis.com"]: Creation complete after 4s [id=esl-efg/vpcaccess.googleapis.com]
+google_project_service.api["run.googleapis.com"]: Creation complete after 4s [id=esl-efg/run.googleapis.com]
+module.db_secret.google_secret_manager_secret_iam_member.secret-access: Creation complete after 5s [id=projects/esl-efg/secrets/db_password/roles/secretmanager.secretAccessor/serviceAccount:458217262457-compute@developer.gserviceaccount.com]
+module.application_network.google_compute_network.main: Still creating... [10s elapsed]
+module.app_image.google_artifact_registry_repository.app_repo: Still creating... [10s elapsed]
+module.app_image.google_artifact_registry_repository.app_repo: Creation complete after 11s [id=projects/esl-efg/locations/europe-west3/repositories/db-health-checker]
+module.app_image.null_resource.image_push: Creating...
+module.app_image.null_resource.image_push: Provisioning with 'local-exec'...
+module.app_image.null_resource.image_push (local-exec): Executing: ["/bin/sh" "-c" "#!/bin/bash\n\nIMAGE_REGISTRY=europe-west3-docker.pkg.dev/esl-efg/db-health-checker\n\nexport ACCESS_TOKEN=$(gcloud auth print-access-token)\necho \"$ACCESS_TOKEN\" | docker --config docker_config login -u oauth2accesstoken --password-stdin $IMAGE_REGISTRY\n\ndocker --config docker_config build -t $IMAGE_REGISTRY/db-health-checker:latest ../\n\ndocker --config docker_config push $IMAGE_REGISTRY/db-health-checker:latest\n\nrm -rf docker_config\n"]
+module.application_network.google_compute_network.main: Creation complete after 12s [id=projects/esl-efg/global/networks/net1]
+module.application_network.google_compute_subnetwork.serverless_access: Creating...
+module.application_network.google_compute_subnetwork.application: Creating...
+module.app_image.null_resource.image_push (local-exec): WARNING! Your password will be stored unencrypted in docker_config/config.json.
+module.app_image.null_resource.image_push (local-exec): Configure a credential helper to remove this warning. See
+module.app_image.null_resource.image_push (local-exec): https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+module.app_image.null_resource.image_push (local-exec): Login Succeeded
+module.app_image.null_resource.image_push (local-exec): #1 [internal] load build definition from Dockerfile
+module.app_image.null_resource.image_push (local-exec): #1 transferring dockerfile: 534B done
+module.app_image.null_resource.image_push (local-exec): #1 DONE 0.0s
+
+module.app_image.null_resource.image_push (local-exec): #2 [internal] load .dockerignore
+module.app_image.null_resource.image_push (local-exec): #2 transferring context: 2B done
+module.app_image.null_resource.image_push (local-exec): #2 DONE 0.0s
+
+module.app_image.null_resource.image_push (local-exec): #3 [internal] load metadata for docker.io/library/alpine:latest
+module.app_image.null_resource.image_push (local-exec): #3 DONE 0.0s
+
+module.app_image.null_resource.image_push (local-exec): #4 [internal] load metadata for docker.io/library/golang:1.17
+module.app_image.null_resource.image_push (local-exec): #4 DONE 1.0s
+
+module.app_image.null_resource.image_push (local-exec): #5 [builder 1/4] FROM docker.io/library/golang:1.17@sha256:87262e4a4c7db56158a80a18fefdc4fee5accc41b59cde821e691d05541bbb18
+module.app_image.null_resource.image_push (local-exec): #5 DONE 0.0s
+
+module.app_image.null_resource.image_push (local-exec): #6 [stage-1 1/6] FROM docker.io/library/alpine:latest
+module.app_image.null_resource.image_push (local-exec): #6 DONE 0.0s
+
+module.app_image.null_resource.image_push (local-exec): #7 [internal] load build context
+module.app_image.null_resource.image_push (local-exec): #7 transferring context: 7.26kB done
+module.app_image.null_resource.image_push (local-exec): #7 DONE 0.0s
+
+module.app_image.null_resource.image_push (local-exec): #8 [stage-1 5/6] RUN chown gouser:users /app -R
+module.app_image.null_resource.image_push (local-exec): #8 CACHED
+
+module.app_image.null_resource.image_push (local-exec): #9 [builder 4/4] RUN cd /app &&      go mod tidy &&      CGO_ENABLED=0 go build -v ./cmd/ops-test-app
+module.app_image.null_resource.image_push (local-exec): #9 CACHED
+
+module.app_image.null_resource.image_push (local-exec): #10 [stage-1 4/6] COPY --from=builder /app/ops-test-app /app/ops-test-app
+module.app_image.null_resource.image_push (local-exec): #10 CACHED
+
+module.app_image.null_resource.image_push (local-exec): #11 [stage-1 2/6] RUN adduser -D -G users gouser
+module.app_image.null_resource.image_push (local-exec): #11 CACHED
+
+module.app_image.null_resource.image_push (local-exec): #12 [builder 2/4] RUN mkdir /app
+module.app_image.null_resource.image_push (local-exec): #12 CACHED
+
+module.app_image.null_resource.image_push (local-exec): #13 [builder 3/4] ADD ./test-app/ /app/
+module.app_image.null_resource.image_push (local-exec): #13 CACHED
+
+module.app_image.null_resource.image_push (local-exec): #14 [stage-1 3/6] RUN mkdir /app
+module.app_image.null_resource.image_push (local-exec): #14 CACHED
+
+module.app_image.null_resource.image_push (local-exec): #15 [stage-1 6/6] WORKDIR /app
+module.app_image.null_resource.image_push (local-exec): #15 CACHED
+
+module.app_image.null_resource.image_push (local-exec): #16 exporting to image
+module.app_image.null_resource.image_push (local-exec): #16 exporting layers done
+module.app_image.null_resource.image_push (local-exec): #16 writing image sha256:f9ba9652bbc08b0140ff48e5843a472fe825a565def9acb4c784de7ef82b2b23 done
+module.app_image.null_resource.image_push (local-exec): #16 naming to europe-west3-docker.pkg.dev/esl-efg/db-health-checker/db-health-checker:latest done
+module.app_image.null_resource.image_push (local-exec): #16 DONE 0.0s
+module.app_image.null_resource.image_push (local-exec): The push refers to repository [europe-west3-docker.pkg.dev/esl-efg/db-health-checker/db-health-checker]
+module.app_image.null_resource.image_push (local-exec): 5f70bf18a086: Preparing
+module.app_image.null_resource.image_push (local-exec): 8d2a77c5ec0d: Preparing
+module.app_image.null_resource.image_push (local-exec): fd241e43be4b: Preparing
+module.app_image.null_resource.image_push (local-exec): 3232dc51f516: Preparing
+module.app_image.null_resource.image_push (local-exec): 02139e40f4ce: Preparing
+module.app_image.null_resource.image_push (local-exec): 7cd52847ad77: Preparing
+module.app_image.null_resource.image_push (local-exec): 7cd52847ad77: Waiting
+module.app_image.null_resource.image_push (local-exec): 5f70bf18a086: Layer already exists
+module.app_image.null_resource.image_push (local-exec): 02139e40f4ce: Pushed
+module.app_image.null_resource.image_push (local-exec): 3232dc51f516: Pushed
+module.app_image.null_resource.image_push (local-exec): 8d2a77c5ec0d: Pushed
+module.app_image.null_resource.image_push (local-exec): fd241e43be4b: Pushed
+module.app_image.null_resource.image_push (local-exec): 7cd52847ad77: Pushed
+module.app_image.null_resource.image_push: Still creating... [10s elapsed]
+module.app_image.null_resource.image_push (local-exec): latest: digest: sha256:2e033ebd8de6f5209f8f15d55c5854903af14a7cdee6b623e0f8d29c80a9388b size: 1571
+module.app_image.null_resource.image_push: Creation complete after 11s [id=4733227095443218757]
+module.application_network.google_compute_subnetwork.serverless_access: Still creating... [10s elapsed]
+module.application_network.google_compute_subnetwork.application: Still creating... [10s elapsed]
+module.application_network.google_compute_subnetwork.serverless_access: Still creating... [20s elapsed]
+module.application_network.google_compute_subnetwork.application: Still creating... [20s elapsed]
+module.application_network.google_compute_subnetwork.application: Creation complete after 23s [id=projects/esl-efg/regions/europe-west3/subnetworks/app-subnet]
+module.database.google_compute_instance.vm: Creating...
+module.application_network.google_compute_subnetwork.serverless_access: Creation complete after 23s [id=projects/esl-efg/regions/europe-west3/subnetworks/connect-subnet]
+module.application_network.google_vpc_access_connector.connector: Creating...
+module.database.google_compute_instance.vm: Still creating... [10s elapsed]
+module.application_network.google_vpc_access_connector.connector: Still creating... [10s elapsed]
+module.database.google_compute_instance.vm: Creation complete after 12s [id=projects/esl-efg/zones/europe-west3-b/instances/database]
+module.database.data.google_compute_subnetwork.subnet: Reading...
+module.database.data.google_compute_subnetwork.subnet: Read complete after 0s [id=projects/esl-efg/regions/europe-west3/subnetworks/app-subnet]
+module.database.google_compute_firewall.allow-local-network: Creating...
+module.application_network.google_vpc_access_connector.connector: Still creating... [20s elapsed]
+module.database.google_compute_firewall.allow-local-network: Still creating... [10s elapsed]
+module.database.google_compute_firewall.allow-local-network: Creation complete after 12s [id=projects/esl-efg/global/firewalls/database-allow-internal-access]
+module.application_network.google_vpc_access_connector.connector: Still creating... [30s elapsed]
+module.application_network.google_vpc_access_connector.connector: Still creating... [40s elapsed]
+module.application_network.google_vpc_access_connector.connector: Still creating... [50s elapsed]
+module.application_network.google_vpc_access_connector.connector: Still creating... [1m0s elapsed]
+module.application_network.google_vpc_access_connector.connector: Still creating... [1m10s elapsed]
+module.application_network.google_vpc_access_connector.connector: Still creating... [1m20s elapsed]
+module.application_network.google_vpc_access_connector.connector: Creation complete after 1m29s [id=projects/esl-efg/locations/europe-west3/connectors/serverless-vpc-connector]
+module.app1.google_cloud_run_v2_service.service: Creating...
+module.app1.google_cloud_run_v2_service.service: Still creating... [10s elapsed]
+module.app1.google_cloud_run_v2_service.service: Still creating... [20s elapsed]
+module.app1.google_cloud_run_v2_service.service: Creation complete after 21s [id=projects/esl-efg/locations/europe-west3/services/app1]
+
+Apply complete! Resources: 20 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+app1 = "https://app1-rnjuzlnrvq-ey.a.run.app"

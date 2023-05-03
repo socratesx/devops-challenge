@@ -1,0 +1,481 @@
+module.db_secret.data.google_project.current: Reading...
+module.database.module.gce-container.data.google_compute_image.coreos: Reading...
+module.database.data.google_compute_zones.zones: Reading...
+module.app_image.data.google_project.current: Reading...
+module.database.module.gce-container.data.google_compute_image.coreos: Read complete after 1s [id=projects/cos-cloud/global/images/cos-stable-105-17412-1-75]
+module.database.data.google_compute_zones.zones: Read complete after 1s [id=projects/esl-efg/regions/europe-west3]
+module.app_image.data.google_project.current: Read complete after 2s [id=projects/esl-efg]
+module.db_secret.data.google_project.current: Read complete after 3s [id=projects/esl-efg]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+  # google_project_service.api["artifactregistry.googleapis.com"] will be created
+  + resource "google_project_service" "api" {
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "esl-efg"
+      + service            = "artifactregistry.googleapis.com"
+    }
+
+  # google_project_service.api["cloudresourcemanager.googleapis.com"] will be created
+  + resource "google_project_service" "api" {
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "esl-efg"
+      + service            = "cloudresourcemanager.googleapis.com"
+    }
+
+  # google_project_service.api["compute.googleapis.com"] will be created
+  + resource "google_project_service" "api" {
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "esl-efg"
+      + service            = "compute.googleapis.com"
+    }
+
+  # google_project_service.api["run.googleapis.com"] will be created
+  + resource "google_project_service" "api" {
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "esl-efg"
+      + service            = "run.googleapis.com"
+    }
+
+  # google_project_service.api["secretmanager.googleapis.com"] will be created
+  + resource "google_project_service" "api" {
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "esl-efg"
+      + service            = "secretmanager.googleapis.com"
+    }
+
+  # google_project_service.api["vpcaccess.googleapis.com"] will be created
+  + resource "google_project_service" "api" {
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "esl-efg"
+      + service            = "vpcaccess.googleapis.com"
+    }
+
+  # module.app1.google_cloud_run_v2_service.service will be created
+  + resource "google_cloud_run_v2_service" "service" {
+      + conditions              = (known after apply)
+      + etag                    = (known after apply)
+      + generation              = (known after apply)
+      + id                      = (known after apply)
+      + ingress                 = "INGRESS_TRAFFIC_ALL"
+      + latest_created_revision = (known after apply)
+      + latest_ready_revision   = (known after apply)
+      + launch_stage            = (known after apply)
+      + location                = "europe-west3"
+      + name                    = "app1"
+      + observed_generation     = (known after apply)
+      + project                 = (known after apply)
+      + reconciling             = (known after apply)
+      + terminal_condition      = (known after apply)
+      + traffic_statuses        = (known after apply)
+      + uid                     = (known after apply)
+      + uri                     = (known after apply)
+
+      + template {
+          + max_instance_request_concurrency = (known after apply)
+          + revision                         = "app1-latest"
+          + service_account                  = (known after apply)
+          + timeout                          = (known after apply)
+
+          + containers {
+              + image = "europe-west3-docker.pkg.dev/esl-efg/db-health-checker/db-health-checker:latest"
+
+              + env {
+                  + name  = "POSTGRESQL_HOST"
+                  + value = (known after apply)
+                }
+              + env {
+                  + name  = "POSTGRESQL_PORT"
+                  + value = "5432"
+                }
+              + env {
+                  + name  = "POSTGRESQL_USER"
+                  + value = "postgres"
+                }
+              + env {
+                  + name  = "POSTGRESQL_DBNAME"
+                  + value = "postgres"
+                }
+              + env {
+                  + name = "POSTGRESQL_PASSWORD"
+
+                  + value_source {
+                      + secret_key_ref {
+                          + secret  = "db_password"
+                          + version = "latest"
+                        }
+                    }
+                }
+
+              + liveness_probe {
+                  + failure_threshold     = 3
+                  + initial_delay_seconds = 20
+                  + period_seconds        = 10
+                  + timeout_seconds       = 1
+
+                  + http_get {
+                      + path = "/health"
+                    }
+                }
+
+              + ports {
+                  + container_port = 8080
+                  + name           = "http1"
+                }
+
+              + resources {
+                  + cpu_idle = (known after apply)
+                  + limits   = (known after apply)
+                }
+
+              + startup_probe {
+                  + failure_threshold     = (known after apply)
+                  + initial_delay_seconds = (known after apply)
+                  + period_seconds        = (known after apply)
+                  + timeout_seconds       = (known after apply)
+
+                  + grpc {
+                      + port    = (known after apply)
+                      + service = (known after apply)
+                    }
+
+                  + http_get {
+                      + path = (known after apply)
+
+                      + http_headers {
+                          + name  = (known after apply)
+                          + value = (known after apply)
+                        }
+                    }
+
+                  + tcp_socket {
+                      + port = (known after apply)
+                    }
+                }
+            }
+
+          + scaling {
+              + max_instance_count = 4
+              + min_instance_count = 2
+            }
+
+          + vpc_access {
+              + connector = (known after apply)
+              + egress    = (known after apply)
+            }
+        }
+
+      + traffic {
+          + percent = 100
+          + type    = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+        }
+    }
+
+  # module.app_image.google_artifact_registry_repository.app_repo will be created
+  + resource "google_artifact_registry_repository" "app_repo" {
+      + create_time   = (known after apply)
+      + description   = "db-health-checker is managed by terraform"
+      + format        = "DOCKER"
+      + id            = (known after apply)
+      + location      = "europe-west3"
+      + mode          = "STANDARD_REPOSITORY"
+      + name          = (known after apply)
+      + project       = (known after apply)
+      + repository_id = "db-health-checker"
+      + update_time   = (known after apply)
+
+      + docker_config {
+          + immutable_tags = true
+        }
+    }
+
+  # module.app_image.null_resource.image_push will be created
+  + resource "null_resource" "image_push" {
+      + id       = (known after apply)
+      + triggers = {
+          + "file_checksums" = "b9fd90f3411425ce5de6908d95b01f53,d4614c6f0ee0db7b227e0987c2f12f4e,6ec80d9ea2b812a8b0762ec8e11bfac1,05145d4b3ef9c584b7e66a237cefb1ca,293db376cd16bb9a8e7b6371cde793ff"
+          + "registry_id"    = (known after apply)
+        }
+    }
+
+  # module.application_network.google_compute_network.main will be created
+  + resource "google_compute_network" "main" {
+      + auto_create_subnetworks                   = false
+      + delete_default_routes_on_create           = false
+      + gateway_ipv4                              = (known after apply)
+      + id                                        = (known after apply)
+      + internal_ipv6_range                       = (known after apply)
+      + mtu                                       = (known after apply)
+      + name                                      = "net1"
+      + network_firewall_policy_enforcement_order = "AFTER_CLASSIC_FIREWALL"
+      + project                                   = (known after apply)
+      + routing_mode                              = (known after apply)
+      + self_link                                 = (known after apply)
+    }
+
+  # module.application_network.google_compute_subnetwork.application will be created
+  + resource "google_compute_subnetwork" "application" {
+      + creation_timestamp         = (known after apply)
+      + external_ipv6_prefix       = (known after apply)
+      + fingerprint                = (known after apply)
+      + gateway_address            = (known after apply)
+      + id                         = (known after apply)
+      + ip_cidr_range              = "10.96.0.0/20"
+      + ipv6_cidr_range            = (known after apply)
+      + name                       = "app-subnet"
+      + network                    = (known after apply)
+      + private_ip_google_access   = true
+      + private_ipv6_google_access = (known after apply)
+      + project                    = (known after apply)
+      + purpose                    = (known after apply)
+      + region                     = "europe-west3"
+      + secondary_ip_range         = (known after apply)
+      + self_link                  = (known after apply)
+      + stack_type                 = (known after apply)
+    }
+
+  # module.application_network.google_compute_subnetwork.serverless_access will be created
+  + resource "google_compute_subnetwork" "serverless_access" {
+      + creation_timestamp         = (known after apply)
+      + external_ipv6_prefix       = (known after apply)
+      + fingerprint                = (known after apply)
+      + gateway_address            = (known after apply)
+      + id                         = (known after apply)
+      + ip_cidr_range              = "10.8.0.0/28"
+      + ipv6_cidr_range            = (known after apply)
+      + name                       = "connect-subnet"
+      + network                    = (known after apply)
+      + private_ip_google_access   = true
+      + private_ipv6_google_access = (known after apply)
+      + project                    = (known after apply)
+      + purpose                    = (known after apply)
+      + region                     = "europe-west3"
+      + secondary_ip_range         = (known after apply)
+      + self_link                  = (known after apply)
+      + stack_type                 = (known after apply)
+    }
+
+  # module.application_network.google_vpc_access_connector.connector will be created
+  + resource "google_vpc_access_connector" "connector" {
+      + id             = (known after apply)
+      + machine_type   = "e2-micro"
+      + max_instances  = 3
+      + max_throughput = 300
+      + min_instances  = 2
+      + min_throughput = 200
+      + name           = "serverless-vpc-connector"
+      + network        = (known after apply)
+      + project        = (known after apply)
+      + region         = "europe-west3"
+      + self_link      = (known after apply)
+      + state          = (known after apply)
+
+      + subnet {
+          + name       = "connect-subnet"
+          + project_id = (known after apply)
+        }
+    }
+
+  # module.database.data.google_compute_subnetwork.subnet will be read during apply
+  # (depends on a resource or a module with changes pending)
+ <= data "google_compute_subnetwork" "subnet" {
+      + description              = (known after apply)
+      + gateway_address          = (known after apply)
+      + id                       = (known after apply)
+      + ip_cidr_range            = (known after apply)
+      + network                  = (known after apply)
+      + private_ip_google_access = (known after apply)
+      + project                  = (known after apply)
+      + region                   = (known after apply)
+      + secondary_ip_range       = (known after apply)
+      + self_link                = "app-subnet"
+    }
+
+  # module.database.google_compute_firewall.allow-local-network will be created
+  + resource "google_compute_firewall" "allow-local-network" {
+      + creation_timestamp = (known after apply)
+      + destination_ranges = (known after apply)
+      + direction          = (known after apply)
+      + enable_logging     = (known after apply)
+      + id                 = (known after apply)
+      + name               = "database-allow-internal-access"
+      + network            = (known after apply)
+      + priority           = 1000
+      + project            = (known after apply)
+      + self_link          = (known after apply)
+      + source_ranges      = (known after apply)
+      + target_tags        = [
+          + "database",
+        ]
+
+      + allow {
+          + ports    = [
+              + "5432",
+            ]
+          + protocol = "tcp"
+        }
+    }
+
+  # module.database.google_compute_instance.vm will be created
+  + resource "google_compute_instance" "vm" {
+      + can_ip_forward       = false
+      + cpu_platform         = (known after apply)
+      + current_status       = (known after apply)
+      + deletion_protection  = false
+      + guest_accelerator    = (known after apply)
+      + id                   = (known after apply)
+      + instance_id          = (known after apply)
+      + label_fingerprint    = (known after apply)
+      + labels               = {
+          + "container-vm" = "cos-stable-105-17412-1-75"
+        }
+      + machine_type         = "e2-micro"
+      + metadata             = (known after apply)
+      + metadata_fingerprint = (known after apply)
+      + min_cpu_platform     = (known after apply)
+      + name                 = "database"
+      + project              = (known after apply)
+      + self_link            = (known after apply)
+      + tags                 = [
+          + "database",
+        ]
+      + tags_fingerprint     = (known after apply)
+      + zone                 = (known after apply)
+
+      + boot_disk {
+          + auto_delete                = true
+          + device_name                = (known after apply)
+          + disk_encryption_key_sha256 = (known after apply)
+          + kms_key_self_link          = (known after apply)
+          + mode                       = "READ_WRITE"
+          + source                     = (known after apply)
+
+          + initialize_params {
+              + image  = "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/images/cos-stable-105-17412-1-75"
+              + labels = (known after apply)
+              + size   = (known after apply)
+              + type   = (known after apply)
+            }
+        }
+
+      + confidential_instance_config {
+          + enable_confidential_compute = (known after apply)
+        }
+
+      + network_interface {
+          + ipv6_access_type   = (known after apply)
+          + name               = (known after apply)
+          + network            = (known after apply)
+          + network_ip         = (known after apply)
+          + stack_type         = (known after apply)
+          + subnetwork         = "app-subnet"
+          + subnetwork_project = (known after apply)
+
+          + access_config {
+              + nat_ip       = (known after apply)
+              + network_tier = (known after apply)
+            }
+        }
+
+      + reservation_affinity {
+          + type = (known after apply)
+
+          + specific_reservation {
+              + key    = (known after apply)
+              + values = (known after apply)
+            }
+        }
+
+      + scheduling {
+          + automatic_restart           = (known after apply)
+          + instance_termination_action = (known after apply)
+          + min_node_cpus               = (known after apply)
+          + on_host_maintenance         = (known after apply)
+          + preemptible                 = (known after apply)
+          + provisioning_model          = (known after apply)
+
+          + node_affinities {
+              + key      = (known after apply)
+              + operator = (known after apply)
+              + values   = (known after apply)
+            }
+        }
+    }
+
+  # module.database.random_integer.zone_index will be created
+  + resource "random_integer" "zone_index" {
+      + id     = (known after apply)
+      + max    = 2
+      + min    = 0
+      + result = (known after apply)
+    }
+
+  # module.db_secret.google_secret_manager_secret.secret will be created
+  + resource "google_secret_manager_secret" "secret" {
+      + create_time = (known after apply)
+      + expire_time = (known after apply)
+      + id          = (known after apply)
+      + name        = (known after apply)
+      + project     = (known after apply)
+      + secret_id   = "db_password"
+
+      + replication {
+          + automatic = true
+        }
+    }
+
+  # module.db_secret.google_secret_manager_secret_iam_member.secret-access will be created
+  + resource "google_secret_manager_secret_iam_member" "secret-access" {
+      + etag      = (known after apply)
+      + id        = (known after apply)
+      + member    = "serviceAccount:458217262457-compute@developer.gserviceaccount.com"
+      + project   = (known after apply)
+      + role      = "roles/secretmanager.secretAccessor"
+      + secret_id = (known after apply)
+    }
+
+  # module.db_secret.google_secret_manager_secret_version.secret-version-data will be created
+  + resource "google_secret_manager_secret_version" "secret-version-data" {
+      + create_time  = (known after apply)
+      + destroy_time = (known after apply)
+      + enabled      = true
+      + id           = (known after apply)
+      + name         = (known after apply)
+      + secret       = (known after apply)
+      + secret_data  = (sensitive value)
+      + version      = (known after apply)
+    }
+
+  # module.db_secret.random_password.password will be created
+  + resource "random_password" "password" {
+      + bcrypt_hash      = (sensitive value)
+      + id               = (known after apply)
+      + length           = 16
+      + lower            = true
+      + min_lower        = 0
+      + min_numeric      = 0
+      + min_special      = 0
+      + min_upper        = 0
+      + number           = true
+      + numeric          = true
+      + override_special = "!#$%&*()-_=+[]{}<>:?"
+      + result           = (sensitive value)
+      + special          = true
+      + upper            = true
+    }
+
+Plan: 20 to add, 0 to change, 0 to destroy.
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply" now.
