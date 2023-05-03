@@ -33,7 +33,7 @@ jobs:
         run: terraform init
       - name: Terraform Plan
         id: tf-plan
-        run: terraform plan -out=tfplan -var 'app_version=${{ github.sha }}'
+        run: terraform plan -out=tfplan -var 'app_version=${GITHUB_SHA::6}'
   apply:
     name: Terraform Apply
     runs-on: ubuntu-latest
