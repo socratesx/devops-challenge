@@ -221,7 +221,7 @@ $ curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://ap
 UP
 ```
 
-### Verify Reosurces
+### Verify Resources
 
 Either from google console or gcloud cli we can verify what we have deployed:
 
