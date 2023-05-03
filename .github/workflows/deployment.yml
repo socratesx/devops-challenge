@@ -29,6 +29,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Terraform Init
+        run: terraform init
       - name: Terraform Plan
         id: tf-plan
         run: terraform plan -out=tfplan -var 'app_version=${{ github.sha }}'
@@ -43,5 +45,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Terraform Init
+      run: terraform init
     - name: Terraform Apply
       run: cd terraform && terraform apply -auto-approve tfplan
