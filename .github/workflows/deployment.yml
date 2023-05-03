@@ -26,14 +26,14 @@ jobs:
     defaults:
       run:
         working-directory: terraform
-      steps:
-        - name: Terraform Plan
-          id: tf-plan
-          run: terraform plan -out=tfplan -var 'app_version=${{ github.sha }}'
+    steps:
+      - name: Terraform Plan
+        id: tf-plan
+        run: terraform plan -out=tfplan -var 'app_version=${{ github.sha }}'
   apply:
     name: Terraform Apply
     runs-on: ubuntu-latest
-    needs: validate
+    needs: plan
     defaults:
       run:
         working-directory: terraform
