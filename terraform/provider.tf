@@ -1,8 +1,11 @@
+# For provider login you need to export the following variable to GOOGLE_APPLICATION_CREDENTIALS=path/to/service-account-key.json
+# If you use the scripts/create_terraform_service_account.sh then you can run GOOGLE_APPLICATION_CREDENTIALS=$PWD/terraform-service-account.json
+# from project root.
+
 terraform {
   backend "gcs" {
     bucket  = "esl-efg-statefiles"
     prefix  = "terraform/state"
-#    credentials = "../terraform-service-account.json"
   }
   required_providers {
     google = {
@@ -18,12 +21,10 @@ terraform {
 
 provider "google" {
   project = var.project_id
-#  credentials = file("../terraform-service-account.json")
   region = var.region
 }
 
 provider "google-beta" {
   project = var.project_id
-#  credentials = file("../terraform-service-account.json")
   region = var.region
 }
