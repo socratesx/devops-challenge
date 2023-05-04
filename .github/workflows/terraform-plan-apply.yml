@@ -5,7 +5,7 @@ on:
     branches:
       - master
 
-
+# We are passing service account json key secret in GOOGLE_CREDENTIALS
 env:
   GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
@@ -28,10 +28,12 @@ jobs:
         id: validate
         run: terraform validate
 
+        # We use this actions to produce a smaller SHA to use it as container tag.
       - uses: benjlevesque/short-sha@v2.2
         id: short-sha
         with:
           length: 6
 
+        # We run Terraform apply immediately as this workflow runs on merge. Reviews/Approvals have been already done.
       - name: Terraform Apply
         run: terraform apply -auto-approve -var 'app_version=${{steps.short-sha.outputs.sha}}'

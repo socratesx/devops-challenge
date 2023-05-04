@@ -259,11 +259,12 @@ UP
 ### Running in CI/CD
 
 Provided that terraform is configured, to run the project with github actions, just make sure that you add the secret 
-`GOOGLE_APPLICATION_CREDENTIALS`in the repository. 
+`GOOGLE_CREDENTIALS`in the repository. 
 
-This variable is used in the workflow file [.github/workflows/deployment.yml](.github/workflows/deployment.yml)
+This variable is used in the workflow files [.github/workflows/](.github/workflows/)
 
-The workflow is quite basic and is triggered on push.
+The workflows are quite basic and are triggered on push/pull requests. For more information about CI/CD check the relevant
+document 
 
 ### Verify Resources
 
