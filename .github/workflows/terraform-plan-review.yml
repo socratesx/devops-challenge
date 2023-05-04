@@ -1,4 +1,4 @@
-name: Terraform CI/CD
+name: Terraform Plan Review
 
 on: [push, pull_request]
 
