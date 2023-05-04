@@ -1,15 +1,15 @@
 # CI/CD Workflow
 
-The CI/CD of the project is implemented in github actions. The workflow files are located here: [.github/workflows](.github/workflows)
+The CI/CD of the project is implemented in github actions. The workflow files are located here: [.github/workflows](../.github/workflows)
 
 The complete workflow can be summarized to the following steps:
 1. A developer creates a feature branch to work on a new feature.
-2. On every push the [../.github/workflows/terraform-plan-review.yml](../.github/workflows/terraform-plan-review.yml) workflow 
+2. On every push the [.github/workflows/terraform-plan-review.yml](../.github/workflows/terraform-plan-review.yml) workflow 
 starts and always perform a plan for the dev to review. If any errors he would know before creating a PR. 
 3. When the dev is finished with their changes he creates a PR. The same workflow is being run but an extra steps runs
 this time that attaches the plan as a comment to the PR.
 4. Another person can review and approve the PR. 
-5. The dev merges the PR and the [../.github/workflows/terraform-plan-apply.yml](../.github/workflows/terraform-plan-apply.yml) 
+5. The dev merges the PR and the [.github/workflows/terraform-plan-apply.yml](../.github/workflows/terraform-plan-apply.yml) 
 runs this time that performs a terraform apply.
 
 So we can distinct three cases.
