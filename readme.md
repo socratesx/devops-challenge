@@ -264,7 +264,7 @@ Provided that terraform is configured, to run the project with github actions, j
 This variable is used in the workflow files [.github/workflows/](.github/workflows/)
 
 The workflows are quite basic and are triggered on push/pull requests. For more information about CI/CD check the relevant
-document 
+document here [docs/CI-CD-Workflow.md](docs/CI-CD-Workflow.md)
 
 ### Verify Resources
 
