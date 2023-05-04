@@ -80,5 +80,6 @@ module "app1" {
     path = "/health"
   }
   connector_id = module.application_network.connector_id # The following connector is used to allow connectivity with our database instance in the application subnet.
+  depends_on = [module.app_image]
 }
 
