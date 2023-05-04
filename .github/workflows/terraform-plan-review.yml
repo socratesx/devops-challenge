@@ -54,13 +54,15 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -out=tf_plan -var 'app_version=${{steps.short-sha.outputs.sha}}'
+        run: |
+          terraform plan -out=tf_plan -var 'app_version=${{steps.short-sha.outputs.sha}}'
+          terraform show -no-color tf_plan > tf_plan.txt
 
       - name: Update Pull Request
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
-          PLAN_FILE: ../tf_plan
+          PLAN_FILE: terraform/tf_plan.txt
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
