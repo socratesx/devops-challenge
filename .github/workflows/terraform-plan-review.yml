@@ -9,8 +9,9 @@ env:
 
 jobs:
   plan:
-    name: Terraform Plan
+    name: Terraform Plan Review
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/master'
     defaults:
       run:
         working-directory: terraform
@@ -35,17 +36,6 @@ jobs:
         id: plan
         run: terraform plan -no-color -out=tf_plan -var 'app_version=${{steps.short-sha.outputs.sha}}'
 
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
-
-      - name: Upload plan
-        uses: actions/upload-artifact@v3
-        with:
-          name: tf-plan
-          path: ./terraform/tf_plan
-          if-no-files-found: error
-
       - name: Update Pull Request
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
@@ -69,30 +59,3 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
-
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
-
-
-#  apply:
-#    name: Terraform Apply
-#    runs-on: ubuntu-latest
-#    needs: plan
-#    defaults:
-#      run:
-#        working-directory: terraform
-#    steps:
-#    - name: Checkout
-#      uses: actions/checkout@v3
-#
-#    - name: Terraform Init
-#      run: terraform init
-#
-#    - name: Download artifact
-#      uses: actions/download-artifact@v3
-#      with:
-#        name: tf-plan
-#
-#    - name: Terraform Apply
-#      run: terraform apply -auto-approve ../tf_plan
