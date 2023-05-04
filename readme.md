@@ -241,8 +241,6 @@ command output can be seen here: [docs/plan.txt](docs/plan.txt)
 [docs/apply.txt](docs/apply.txt)
 4. When `terraform apply` command is finished, and if everything went well, the following output will be printed in the end: 
 ```shell
-Apply complete! Resources: 20 added, 0 changed, 0 destroyed.
-
 Outputs:
 
 app1 = "https://app1-rnjuzlnrvq-ey.a.run.app"
