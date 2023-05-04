@@ -8,7 +8,6 @@ on:
 
 env:
   GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-  GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
 jobs:
   deploy:
@@ -34,12 +33,5 @@ jobs:
         with:
           length: 6
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -out=tf_plan -var 'app_version=${{steps.short-sha.outputs.sha}}'
-
       - name: Terraform Apply
-        run: terraform apply -auto-approve ../tf_plan
-
-
-
+        run: terraform apply -auto-approve -var 'app_version=${{steps.short-sha.outputs.sha}}'
