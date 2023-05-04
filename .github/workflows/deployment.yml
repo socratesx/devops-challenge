@@ -43,10 +43,11 @@ jobs:
         run: terraform plan -out=tfplan -var 'app_version=${{steps.short-sha.outputs.sha}}'
 
       - name: Upload plan
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: tf-plan
-          path: terraform/tf_plan
+          path: ./terraform/tf_plan
+          if-no-files-found: error
 
       - name: Request Approval
         if: success()
@@ -67,9 +68,9 @@ jobs:
     - name: Terraform Init
       run: terraform init
     - name: Download artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: tf_plan
-        path: terraform/tf_plan
+        path: ./terraform/tf_plan
     - name: Terraform Apply
       run: cd terraform && terraform apply -auto-approve tfplan
