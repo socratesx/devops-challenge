@@ -38,6 +38,11 @@ jobs:
       - name: Terraform Plan
         id: tf-plan
         run: terraform plan -out=tfplan -var 'app_version=${{steps.short-sha.outputs.sha}}'
+      - name: Upload plan
+        uses: actions/upload-artifact@v2
+        with:
+          name: tf-plan
+          path: tf_plan
   apply:
     name: Terraform Apply
     runs-on: ubuntu-latest
@@ -45,11 +50,16 @@ jobs:
     defaults:
       run:
         working-directory: terraform
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.apply == 'true'
+    if: github.event_name == 'workflow_dispatch'
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Terraform Init
       run: terraform init
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: tf_plan
+        path: tf_plan
     - name: Terraform Apply
       run: cd terraform && terraform apply -auto-approve tfplan
