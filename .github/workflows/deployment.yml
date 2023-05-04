@@ -29,20 +29,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Terraform Init
         run: terraform init
+
       - uses: benjlevesque/short-sha@v2.2
         id: short-sha
         with:
           length: 6
+
       - name: Terraform Plan
         id: tf-plan
         run: terraform plan -out=tfplan -var 'app_version=${{steps.short-sha.outputs.sha}}'
+
       - name: Upload plan
         uses: actions/upload-artifact@v2
         with:
           name: tf-plan
-          path: tf_plan
+          path: terraform/tf_plan
+
+      - name: Request Approval
+        if: success()
+        run: |
+          echo "Deployment requested for commit $GITHUB_SHA"
+          echo "Click here to approve: ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}"
   apply:
     name: Terraform Apply
     runs-on: ubuntu-latest
@@ -50,7 +60,7 @@ jobs:
     defaults:
       run:
         working-directory: terraform
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.approval == 'true'
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -60,6 +70,6 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: tf_plan
-        path: tf_plan
+        path: terraform/tf_plan
     - name: Terraform Apply
       run: cd terraform && terraform apply -auto-approve tfplan
