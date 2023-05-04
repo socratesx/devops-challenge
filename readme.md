@@ -241,8 +241,6 @@ command output can be seen here: [docs/plan.txt](docs/plan.txt)
 [docs/apply.txt](docs/apply.txt)
 4. When `terraform apply` command is finished, and if everything went well, the following output will be printed in the end: 
 ```shell
-Apply complete! Resources: 20 added, 0 changed, 0 destroyed.
-
 Outputs:
 
 app1 = "https://app1-rnjuzlnrvq-ey.a.run.app"
@@ -307,3 +305,11 @@ $ gcloud run services list
    SERVICE  REGION        URL                                   LAST DEPLOYED BY                               LAST DEPLOYED AT
 ✔  app1     europe-west3  https://app1-rnjuzlnrvq-ey.a.run.app  svc-terraform@esl-efg.iam.gserviceaccount.com  2023-05-03T11:42:22.085385Z
 ```
+## Clean up
+
+To remove the deployed resources: 
+1. Go to [terraform](terraform) directory and initialize 
+2. Export the "GOOGLE_APPLICATION_CREDENTIALS"
+3. Run `terraform destroy`
+4. The above command will remove everything that is managed by terraform. 
+5. Run the [scripts/cleanup.sh](scripts/cleanup.sh) script to remove the service account and the state bucket

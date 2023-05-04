@@ -4,62 +4,17 @@ module.database.data.google_compute_zones.zones: Reading...
 module.app_image.data.google_project.current: Reading...
 module.database.module.gce-container.data.google_compute_image.coreos: Read complete after 1s [id=projects/cos-cloud/global/images/cos-stable-105-17412-1-75]
 module.database.data.google_compute_zones.zones: Read complete after 1s [id=projects/esl-efg/regions/europe-west3]
-module.app_image.data.google_project.current: Read complete after 2s [id=projects/esl-efg]
-module.db_secret.data.google_project.current: Read complete after 3s [id=projects/esl-efg]
+module.db_secret.data.google_project.current: Read complete after 2s [id=projects/esl-efg]
+module.app_image.data.google_project.current: Read complete after 3s [id=projects/esl-efg]
+module.app_image.data.google_service_account_access_token.access_token: Reading...
+module.app_image.data.google_service_account_access_token.access_token: Read complete after 0s [id=projects/-/serviceAccounts/svc-terraform@esl-efg.iam.gserviceaccount.com]
 
-Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
   + create
  <= read (data resources)
 
 Terraform will perform the following actions:
-
-  # google_project_service.api["artifactregistry.googleapis.com"] will be created
-  + resource "google_project_service" "api" {
-      + disable_on_destroy = false
-      + id                 = (known after apply)
-      + project            = "esl-efg"
-      + service            = "artifactregistry.googleapis.com"
-    }
-
-  # google_project_service.api["cloudresourcemanager.googleapis.com"] will be created
-  + resource "google_project_service" "api" {
-      + disable_on_destroy = false
-      + id                 = (known after apply)
-      + project            = "esl-efg"
-      + service            = "cloudresourcemanager.googleapis.com"
-    }
-
-  # google_project_service.api["compute.googleapis.com"] will be created
-  + resource "google_project_service" "api" {
-      + disable_on_destroy = false
-      + id                 = (known after apply)
-      + project            = "esl-efg"
-      + service            = "compute.googleapis.com"
-    }
-
-  # google_project_service.api["run.googleapis.com"] will be created
-  + resource "google_project_service" "api" {
-      + disable_on_destroy = false
-      + id                 = (known after apply)
-      + project            = "esl-efg"
-      + service            = "run.googleapis.com"
-    }
-
-  # google_project_service.api["secretmanager.googleapis.com"] will be created
-  + resource "google_project_service" "api" {
-      + disable_on_destroy = false
-      + id                 = (known after apply)
-      + project            = "esl-efg"
-      + service            = "secretmanager.googleapis.com"
-    }
-
-  # google_project_service.api["vpcaccess.googleapis.com"] will be created
-  + resource "google_project_service" "api" {
-      + disable_on_destroy = false
-      + id                 = (known after apply)
-      + project            = "esl-efg"
-      + service            = "vpcaccess.googleapis.com"
-    }
 
   # module.app1.google_cloud_run_v2_service.service will be created
   + resource "google_cloud_run_v2_service" "service" {
@@ -193,18 +148,13 @@ Terraform will perform the following actions:
       + project       = (known after apply)
       + repository_id = "db-health-checker"
       + update_time   = (known after apply)
-
-      + docker_config {
-          + immutable_tags = true
-        }
     }
 
   # module.app_image.null_resource.image_push will be created
   + resource "null_resource" "image_push" {
       + id       = (known after apply)
       + triggers = {
-          + "file_checksums" = "b9fd90f3411425ce5de6908d95b01f53,d4614c6f0ee0db7b227e0987c2f12f4e,6ec80d9ea2b812a8b0762ec8e11bfac1,05145d4b3ef9c584b7e66a237cefb1ca,293db376cd16bb9a8e7b6371cde793ff"
-          + "registry_id"    = (known after apply)
+          + "always_run" = (known after apply)
         }
     }
 
@@ -474,8 +424,13 @@ Terraform will perform the following actions:
       + upper            = true
     }
 
-Plan: 20 to add, 0 to change, 0 to destroy.
+Plan: 14 to add, 0 to change, 0 to destroy.
 
-───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Changes to Outputs:
+  + app1 = (known after apply)
 
-Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply" now.
+─────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+Releasing state lock. This may take a few moments...
