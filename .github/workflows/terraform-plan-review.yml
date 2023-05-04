@@ -60,7 +60,7 @@ jobs:
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
-          PLAN_FILE: tf_plan
+          PLAN_FILE: ../tf_plan
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
