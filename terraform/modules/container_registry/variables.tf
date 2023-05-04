@@ -20,3 +20,9 @@ variable "application_code" {
   description = "The application code path in this repository"
   default = "../test-app"
 }
+
+variable "service_account_name" {
+  type = string
+  description = "The name of the service account that will be used to push the container to the artifact registry"
+  default = "svc-terraform"
+}

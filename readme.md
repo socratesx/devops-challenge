@@ -50,7 +50,20 @@ The project structure can be summarized in the following list:
  - `scripts/`: Contains scripts & helpers
  - `terraform/`: Contains the proposed solution
 
-## Getting Started
+## Requirements
+
+### Google APIs
+The google project needs to have the following apis enabled:
+
+- compute.googleapis.com 
+- cloudresourcemanager.googleapis.com 
+- artifactregistry.googleapis.com 
+- secretmanager.googleapis.com 
+- run.googleapis.com 
+- vpcaccess.googleapis.com 
+- iamcredentials.googleapis.com
+
+There is a script to do that in [scripts/enable_required_apis.sh](scripts/enable_required_apis.sh)
 
 ### Service Account Configuration for Terraform
 
@@ -68,8 +81,50 @@ A service account is required for terraform to run. The service account needs th
  - roles/vpcaccess.admin 
  - roles/servicemanagement.admin
 
-A local file with filename: `terraform-service-account.json` contains the service account key that the google terraform
-provider uses durin init.
+#### Configure Terraform
+
+The next step is to configure required variables: 
+
+ - `project_id`
+ - `region`
+ - `bucket name`
+
+The `project_id` & `region` can be set here [terraform/variables.tf](terraform/variables.tf) or during running.
+
+The backend is using GCS to store the state files. Configure the bucket name in the following location:
+[terraform/provider.tf](terraform/provider.tf)
+
+Unfortunately backend configuration cannot use variables, so the bucket name must be configured manually.
+
+To create a bucket you can use the following script:
+[scripts/create_bucket_for_terraform_state.sh](scripts/create_bucket_for_terraform_state.sh)
+
+```shell
+Creating gs://esl-efg-statefiles/...
+```
+Use the name above to configure the backend.
+
+## Getting Started
+
+You can run this project locally or with github actions.
+
+### Local Setup
+
+To run locally the project, the PC must meet the following requirements: 
+ - gcloud CLI 
+ - docker 
+ - terraform
+
+If you already have a service account that you want to use for this project you can skip the next section.
+Just export the following variable:
+
+```shell
+export GOOGLE_APPLICATION_CREDENTIALS=path/to/existing-service-account-key-file
+```
+
+#### Setup a new service account
+The gcloud cli tool must be already configured with an IAM account that has at least IAM administrator permissions to run
+the [scripts/create_terraform_service_account.sh](scripts/create_terraform_service_account.sh) script.
 
 The [scripts/create_terraform_service_account.sh](scripts/create_terraform_service_account.sh) is setting up this service
 account and creates the necessary key in the project root. It is created only for convenience and it is not required for
@@ -87,6 +142,8 @@ terraform. __DO NOT USE AN EXISTING ACCOUNT__._
 It is recommended to create a new project for testing this solution out. 
 
 To run the script do it from the __project root__: 
+
+Example:
 
 ```shell
 $ ./scripts/create_terraform_service_account.sh 
@@ -113,39 +170,15 @@ ERROR: (gcloud.iam.service-accounts.keys.delete) INVALID_ARGUMENT: Service Accou
 deleted key [85973262fac8197c0c3c3edfd60dfaaa5b74f005] for service account [svc-terraform@esl-efg.iam.gserviceaccount.com]
 Creating a new key for svc-terraform and storing it locally in /home/socratesx/Workspace/Pycharm/my-stuff/efg/terraform-service-account.json
 created key [5f349cba3ed7adf30f4d4db14ca1a5814a9f96a6] of type [json] as [/home/socratesx/Workspace/Pycharm/my-stuff/efg/terraform-service-account.json] for [svc-terraform@esl-efg.iam.gserviceaccount.com]
-Creating gs://esl-efg-statefiles/...
 
 ```
-#### Bucket for Terraform Statefile
-The script also creates GCS bucket named after `STATE_FILE_BUCKET_NAME=${PROJECT_ID}-statefiles`. In the above output the
-bucket name can be seen in the last line `Creating gs://esl-efg-statefiles/...`. 
+The script creates a file in project root: `terraform-service-account.json` so you can use it for provider authentication:
 
+```shell
+export GOOGLE_APPLICATION_CREDENTIALS=$PWD/terraform-service-account.json
+```
 
-### Requirements
-To run locally the project, the PC must meet the following requirements: 
- - gcloud CLI 
- - docker 
- - terraform
-
-The gcloud cli tool must be already configured with an IAM account that has at least IAM administrator permissions to run
-the [scripts/create_terraform_service_account.sh](scripts/create_terraform_service_account.sh) script.
-
-### Configure Terraform Variables
-
-The required variables that need to be set during terraform are: 
-
- - project_id
- - region
-
-They can be set here [terraform/variables.tf](terraform/variables.tf) or during running.
-
-### Configure Terraform Backend
-The backend is using GCS to store the state files. Configure the bucket name in the following location:
-[terraform/provider.tf](terraform/provider.tf)
-
-Unfortunately backend configuration cannot use variables, so the bucket name must be configured manually.
-
-### Initialize and run Terraform
+#### Initialize and run Terraform
 
 To run the solution go to [terraform](terraform) and follow the steps:
 1. Run `terraform init`: 
@@ -221,6 +254,17 @@ $ curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://ap
 UP
 ```
 
+### Running Terraform with Github Actions
+
+### Running in CI/CD
+
+Provided that terraform is configured, to run the project with github actions, just make sure that you add the secret 
+`GOOGLE_APPLICATION_CREDENTIALS`in the repository. 
+
+This variable is used in the workflow file [.github/workflows/deployment.yml](.github/workflows/deployment.yml)
+
+The workflow is quite basic and is triggered on push.
+
 ### Verify Resources
 
 Either from google console or gcloud cli we can verify what we have deployed:
@@ -262,4 +306,3 @@ $ gcloud run services list
    SERVICE  REGION        URL                                   LAST DEPLOYED BY                               LAST DEPLOYED AT
 ✔  app1     europe-west3  https://app1-rnjuzlnrvq-ey.a.run.app  svc-terraform@esl-efg.iam.gserviceaccount.com  2023-05-03T11:42:22.085385Z
 ```
-
