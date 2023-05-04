@@ -307,3 +307,11 @@ $ gcloud run services list
    SERVICE  REGION        URL                                   LAST DEPLOYED BY                               LAST DEPLOYED AT
 ✔  app1     europe-west3  https://app1-rnjuzlnrvq-ey.a.run.app  svc-terraform@esl-efg.iam.gserviceaccount.com  2023-05-03T11:42:22.085385Z
 ```
+## Clean up
+
+To remove the deployed resources: 
+1. Go to [terraform](terraform) directory and initialize 
+2. Export the "GOOGLE_APPLICATION_CREDENTIALS"
+3. Run `terraform destroy`
+4. The above command will remove everything that is managed by terraform. 
+5. Run the [scripts/cleanup.sh](scripts/cleanup.sh) script to remove the service account and the state bucket
