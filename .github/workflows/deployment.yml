@@ -72,7 +72,6 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: tf-plan
-        path: ./terraform/tf_plan
 
     - name: Unzip Artifact
       run: unzip tf_plan.zip
