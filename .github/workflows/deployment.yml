@@ -74,7 +74,10 @@ jobs:
         name: tf-plan
 
     - name: Unzip Artifact
-      run: unzip tf_plan.zip
+      run: |
+        ls -la
+        ls -la ..
+        unzip tf_plan.zip
 
     - name: Terraform Apply
       run: terraform apply -auto-approve tf_plan
