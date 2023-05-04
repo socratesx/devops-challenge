@@ -30,6 +30,7 @@ jobs:
     needs: pre_job
     name: Terraform Plan Review
     runs-on: ubuntu-latest
+    permissions: write-all
     if: github.ref != 'refs/heads/master' && needs.pre_job.outputs.should_skip != 'true'
     defaults:
       run:
