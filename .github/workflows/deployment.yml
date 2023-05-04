@@ -64,12 +64,18 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
     - name: Terraform Init
       run: terraform init
+
     - name: Download artifact
       uses: actions/download-artifact@v3
       with:
         name: tf-plan
         path: ./terraform/tf_plan
+
+    - name: Unzip Artifact
+      run: unzip tf_plan.zip
+
     - name: Terraform Apply
       run: terraform apply -auto-approve tf_plan
