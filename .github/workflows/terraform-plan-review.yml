@@ -23,7 +23,8 @@ jobs:
         uses: fkirc/skip-duplicate-actions@v5
         with:
           # All of these options are optional, so you can remove them if you are happy with the defaults
-          concurrent_skipping: 'always'
+          concurrent_skipping: 'outdated_runs'
+
 
   plan:
     needs: pre_job
