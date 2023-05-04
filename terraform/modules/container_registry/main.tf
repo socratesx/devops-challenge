@@ -16,7 +16,7 @@ resource "google_artifact_registry_repository" "app_repo" {
 
 data "google_service_account_access_token" "access_token" {
   provider               = google
-  target_service_account = "svc-terraform@${data.google_project.current.project_id}.iam.gserviceaccount.com"
+  target_service_account = "${var.service_account_name}@${data.google_project.current.project_id}.iam.gserviceaccount.com"
   scopes                 = ["cloud-platform"]
   lifetime               = "300s"
 }

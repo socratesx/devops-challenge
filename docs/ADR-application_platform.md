@@ -29,5 +29,10 @@ The rest are rejected because of the following reasons:
 
 ## Consequences
 
-If more microservices need to be deployed in the future it might be better to switch to a GKE cluster. Simplicity is 
-ensured.
+Cloud Run covers the requirements in logging/monitoring from its web interface, as well as of seamless upgrades of the
+application. Before a new version starts serving it must have liveness & http health checks passed. 
+
+Also by changing the max_instances variable we can ensure that the application will scale enough to cover demand increase.
+
+Simplicity is ensured.
+

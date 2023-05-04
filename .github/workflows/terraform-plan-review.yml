@@ -1,0 +1,89 @@
+name: Terraform Plan Review
+
+on: [push, pull_request]
+
+
+env:
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+  GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  pre_job:
+    # continue-on-error: true # Uncomment once integration is finished
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          # All of these options are optional, so you can remove them if you are happy with the defaults
+          concurrent_skipping: 'outdated_runs'
+
+
+  plan:
+    needs: pre_job
+    name: Terraform Plan Review
+    runs-on: ubuntu-latest
+    permissions: write-all
+    if: github.ref != 'refs/heads/master' && needs.pre_job.outputs.should_skip != 'true'
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform Init
+        id : init
+        run: terraform init
+
+      - name: Validate Terraform
+        id: validate
+        run: terraform validate
+
+      - uses: benjlevesque/short-sha@v2.2
+        id: short-sha
+        with:
+          length: 6
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan -out=tf_plan -var 'app_version=${{steps.short-sha.outputs.sha}}'
+          terraform show -no-color tf_plan > tf_plan.txt
+
+      - name: Update Pull Request
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN_FILE: terraform/tf_plan.txt
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const plan = fs.readFileSync(process.env.PLAN_FILE, 'utf8');
+            const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            <details><summary>Show Plan</summary>
+            
+            \`\`\`terraform\n
+            
+            ${plan}
+            
+            \`\`\`
+            
+            </details>
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })

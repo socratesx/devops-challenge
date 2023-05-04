@@ -3,7 +3,7 @@ set -a
 
 PROJECT_ID=esl-efg
 TERRAFORM_SERVICE_ACCOUNT_NAME=svc-terraform
-STATE_FILE_BUCKET_NAME=${PROJECT_ID}-statefiles
+
 
 svc_account_roles=( \
 "roles/iam.serviceAccountTokenCreator" \
@@ -44,4 +44,3 @@ done
 echo "Creating a new key for $TERRAFORM_SERVICE_ACCOUNT_NAME and storing it locally in $PWD/terraform-service-account.json"
 gcloud iam service-accounts keys create "$PWD/terraform-service-account.json" --iam-account "$TERRAFORM_SERVICE_ACCOUNT_NAME@${PROJECT_ID}.iam.gserviceaccount.com"
 
-gcloud storage buckets create gs://$STATE_FILE_BUCKET_NAME
