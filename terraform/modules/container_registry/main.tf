@@ -21,8 +21,9 @@ resource "google_artifact_registry_repository" "app_repo" {
 # triggered by changes in the registry_id or changes in the file_checksums in the application code directory.
 resource "null_resource" "image_push" {
   triggers = {
-    registry_id    = google_artifact_registry_repository.app_repo.id
-    file_checksums = join(",", [for f in fileset(var.application_code, "**") : filemd5("${var.application_code}/${f}")])
+#    registry_id    = google_artifact_registry_repository.app_repo.id
+#    file_checksums = join(",", [for f in fileset(var.application_code, "**") : filemd5("${var.application_code}/${f}")])
+    always_run = timestamp()
   }
   provisioner "local-exec" {
     command = <<EOF
