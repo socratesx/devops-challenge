@@ -82,3 +82,4 @@ go run cmd/ops-test-app/main.go
 ## Database
 
 You can create a new user/database for the application if you wish, but it is not part of the test and we aren't expecting you to do that. We just want a working connection to the database where the application can successfully ping the database.
+
