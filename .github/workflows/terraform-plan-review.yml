@@ -2,7 +2,7 @@ name: Terraform Plan Review
 
 on: [push, pull_request]
 
-
+# We are passing service account json key secret in GOOGLE_CREDENTIALS
 env:
   GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
@@ -11,22 +11,20 @@ permissions:
   contents: read
 
 jobs:
+  # We use this pre-job to avoid running duplicate workflows on Pull Requests
   pre_job:
-    # continue-on-error: true # Uncomment once integration is finished
     runs-on: ubuntu-latest
-    # Map a step output to a job output
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
     steps:
       - id: skip_check
         uses: fkirc/skip-duplicate-actions@v5
         with:
-          # All of these options are optional, so you can remove them if you are happy with the defaults
           concurrent_skipping: 'outdated_runs'
           skip_after_successful_duplicate: false
 
-
   plan:
+    # This Job produces a Plan so the Developer to see what to expect from his changes.
     needs: pre_job
     name: Terraform Plan Review
     runs-on: ubuntu-latest
@@ -58,6 +56,7 @@ jobs:
           terraform plan -out=tf_plan -var 'app_version=${{steps.short-sha.outputs.sha}}'
           terraform show -no-color tf_plan > tf_plan.txt
 
+        # If the push is done on a PR, then the following job will add a comment to the PR attaching the plan for review.
       - name: Update Pull Request
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
