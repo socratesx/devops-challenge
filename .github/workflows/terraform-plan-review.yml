@@ -1,6 +1,10 @@
 name: Terraform Plan Review
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - !master
+  pull_request:
 
 # We are passing service account json key secret in GOOGLE_CREDENTIALS
 env:
