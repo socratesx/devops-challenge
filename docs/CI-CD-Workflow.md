@@ -4,12 +4,12 @@ The CI/CD of the project is implemented in github actions. The workflow files ar
 
 The complete workflow can be summarized to the following steps:
 1. A developer creates a feature branch to work on a new feature.
-2. On every push the [.github/workflows/terraform-plan-review.yml](../.github/workflows/terraform-plan-review.yml) workflow 
+2. On every push the [terraform-plan-review.yml](../.github/workflows/terraform-plan-review.yml) workflow 
 starts and always perform a plan for the dev to review. If any errors he would know before creating a PR. 
 3. When the dev is finished with their changes he creates a PR. The same workflow is being run but an extra steps runs
 this time that attaches the plan as a comment to the PR.
 4. Another person can review and approve the PR. 
-5. The dev merges the PR and the [.github/workflows/terraform-plan-apply.yml](../.github/workflows/terraform-plan-apply.yml) 
+5. The dev merges the PR and the [terraform-plan-apply.yml](../.github/workflows/terraform-plan-apply.yml) 
 runs this time that performs a terraform apply.
 
 So we can distinct three cases.
@@ -19,20 +19,20 @@ So we can distinct three cases.
 The master branch is protected so no direct pushes are allowed. Pushes refer only to feature branches. The workflow can 
 be summarized with the following diagram:
 
-![](CI-Workflow-on-push.png)
+![](diagrams/CI-Workflow-on-push.png)
 
 ## Pull Requests
 
 On pull requests the same workflow with pushes is triggered, but this time it attaches the plan as a comment for the
 review process:
 
-![](CI-Workflow-on-PR.png)
+![](diagrams/CI-Workflow-on-PR.png)
 
 ## Merges
 
 When a branch is merged it means that has passed review process and the new application version can be deployed:
 
-![](CI-Workflow-on-Merge.png)
+![](diagrams/CI-Workflow-on-Merge.png)
 
 ## Deploying a new version
 
@@ -172,17 +172,17 @@ Date:   Thu May 4 21:38:08 2023 +0300
 
 ```
 5. We continue our development until we are finished and then we can do a Pull request:
-![](pull_request_screenshot.png)
+![](screenshots/pull_request_screenshot.png)
 
 We see the bot comment with the plan there.
 
 6. We approve the PR and follow up the apply workflow
-![](Following-apply-screenshot.png)
+![](screenshots/Following-apply-screenshot.png)
 
 7. After job completes https://github.com/socratesx/devops-challenge/actions/runs/4886269015 
 
 We check the commit sha:
-![](Checking-commit-sha-screenshot.png)
+![](screenshots/Checking-commit-sha-screenshot.png)
 
 And then we check the cloud run service:
 
