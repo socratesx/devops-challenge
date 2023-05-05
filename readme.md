@@ -2,7 +2,7 @@
 
 The proposed solution for this challenge can be summarized with the following High Level Diagram: 
 
-![High Level Diagram](./docs/HLD.png)
+![High Level Diagram](docs/diagrams/HLD.png)
 
 The following components are deployed in that order: 
 
@@ -21,23 +21,23 @@ The solution is based in custom & third-party Terraform modules.
 
 ### Terraform Statefile Location
 The ADR for the state files location is located in 
-[./docs/ADR-terraform-state-file-location.md](./docs/ADR-terraform-state-file-location.md). The state file will be 
+[docs/decisions/ADR-terraform-state-file-location.md](docs/decisions/ADR-terraform-state-file-location.md). The state file will be 
 stored in a google bucket following the naming convention `{project_id}-statefiles`
 
 ### Application platform
 
-The ADR for the platform is located in [./docs/ADR-application_platform.md](./docs/ADR-application_platform.md). 
+The ADR for the platform is located in [docs/decisions/ADR-application_platform.md](docs/decisions/ADR-application_platform.md). 
 The platform that was selected as the most suitable is Google Cloud Run.
 
 ### Container Registry
 
-The ADR for this decision is located in  [./docs/ADR-container-registry.md](./docs/ADR-container-registry.md)
+The ADR for this decision is located in [docs/decisions/ADR-container-registry.md](docs/decisions/ADR-container-registry.md)
 
 The Google Artifact Registry was selected for keeping the application artifacts. 
 
 ### Build Process
 
-The ADR for this decision is located in  [./docs/ADR-build-process.md](./docs/ADR-build-process.md).
+The ADR for this decision is located in [docs/decisions/ADR-build-process.md](docs/decisions/ADR-build-process.md).
 
 A custom inline script invoked by terraform was selected to keep things simple. 
 
@@ -49,6 +49,7 @@ The project structure can be summarized in the following list:
  - `docs/` : Contains documents & diagrams
  - `scripts/`: Contains scripts & helpers
  - `terraform/`: Contains the proposed solution
+ - `.github/`: Contains GitHub workflows
 
 ## Requirements
 
@@ -63,7 +64,7 @@ The google project needs to have the following apis enabled:
 - vpcaccess.googleapis.com 
 - iamcredentials.googleapis.com
 
-There is a script to do that in [scripts/enable_required_apis.sh](scripts/enable_required_apis.sh)
+There is a script to do that in [enable_required_apis.sh](scripts/enable_required_apis.sh)
 
 ### Service Account Configuration for Terraform
 
@@ -81,7 +82,7 @@ A service account is required for terraform to run. The service account needs th
  - roles/vpcaccess.admin 
  - roles/servicemanagement.admin
 
-#### Configure Terraform
+### Terraform Configuration
 
 The next step is to configure required variables: 
 
@@ -89,7 +90,7 @@ The next step is to configure required variables:
  - `region`
  - `bucket name`
 
-The `project_id` & `region` can be set here [terraform/variables.tf](terraform/variables.tf) or during running.
+The `project_id` & `region` can be set here [terraform/variables.tf](terraform/variables.tf).
 
 The backend is using GCS to store the state files. Configure the bucket name in the following location:
 [terraform/provider.tf](terraform/provider.tf)
@@ -97,7 +98,7 @@ The backend is using GCS to store the state files. Configure the bucket name in 
 Unfortunately backend configuration cannot use variables, so the bucket name must be configured manually.
 
 To create a bucket you can use the following script:
-[scripts/create_bucket_for_terraform_state.sh](scripts/create_bucket_for_terraform_state.sh)
+[create_bucket_for_terraform_state.sh](scripts/create_bucket_for_terraform_state.sh)
 
 ```shell
 Creating gs://esl-efg-statefiles/...
@@ -124,9 +125,9 @@ export GOOGLE_APPLICATION_CREDENTIALS=path/to/existing-service-account-key-file
 
 #### Setup a new service account
 The gcloud cli tool must be already configured with an IAM account that has at least IAM administrator permissions to run
-the [scripts/create_terraform_service_account.sh](scripts/create_terraform_service_account.sh) script.
+the [create_terraform_service_account.sh](scripts/create_terraform_service_account.sh) script.
 
-The [scripts/create_terraform_service_account.sh](scripts/create_terraform_service_account.sh) is setting up this service
+The [create_terraform_service_account.sh](scripts/create_terraform_service_account.sh) is setting up this service
 account and creates the necessary key in the project root. It is created only for convenience and it is not required for
 the solution. Just configure the correct `PROJECT_ID` the name for the service account:
 
@@ -180,7 +181,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=$PWD/terraform-service-account.json
 
 #### Initialize and run Terraform
 
-To run the solution go to [terraform](terraform) and follow the steps:
+To run the solution cd to [terraform/](terraform) folder and follow the steps:
 1. Run `terraform init`: 
 ```shell
 $ terraform init
@@ -236,9 +237,9 @@ rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
 ```
 2. Now that the terraform is initialized with a GCS  backend, run `terraform plan`. For keeping this readme clean, the
-command output can be seen here: [docs/plan.txt](docs/plan.txt)
+command output can be seen here: [plan.txt](docs/plan.txt)
 3. If the plan is ok, then run `terraform apply`. For keeping the readme clean the command's output is stored in here:
-[docs/apply.txt](docs/apply.txt)
+[apply.txt](docs/apply.txt)
 4. When `terraform apply` command is finished, and if everything went well, the following output will be printed in the end: 
 ```shell
 Outputs:
@@ -262,7 +263,7 @@ Provided that terraform is configured, to run the project with github actions, j
 This variable is used in the workflow files [.github/workflows/](.github/workflows/)
 
 The workflows are quite basic and are triggered on push/pull requests. For more information about CI/CD check the relevant
-document here [docs/CI-CD-Workflow.md](docs/CI-CD-Workflow.md)
+document here [CI-CD-Workflow.md](docs/CI-CD-Workflow.md)
 
 ### Verify Resources
 

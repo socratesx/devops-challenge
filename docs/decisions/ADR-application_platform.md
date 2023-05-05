@@ -23,7 +23,7 @@ Based on that the best option is to run the application in cloud run.
 The rest are rejected because of the following reasons:
  - Compute instances behind a LB: High Terraform Code complexity, Higher cloud costs
  - Serverless in Google AppEngine: Higher Terraform code complexity. Limitations in terraform provider:
-![appengine-limitations](appengine-limitations.png)
+![appengine-limitations](../screenshots/appengine-limitations.png)
  - Serverless Cloud Functions: Not suitable for this application. 
  - GKE: Overkill for a simple containerized application. Higher terraform code complexity. Higher maintenance costs.
 
