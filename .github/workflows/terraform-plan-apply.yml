@@ -1,12 +1,12 @@
 name: Terraform Plan Apply
 
 on:
-  pull_request:
-    paths:
-      - terraform/**
-      - test-app/**
+  push:
     branches:
-      - master
+      - 'master'
+    paths:
+      - 'terraform/**'
+      - 'test-app/**'
 
 # We are passing service account json key secret in GOOGLE_CREDENTIALS
 env:
