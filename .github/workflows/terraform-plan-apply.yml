@@ -3,8 +3,8 @@ name: Terraform Plan Apply
 on:
   push:
     paths:
-      - terraform
-      - test-app
+      - terraform/**
+      - test-app/**
     branches:
       - master
 
