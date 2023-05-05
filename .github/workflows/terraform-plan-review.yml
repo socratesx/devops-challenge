@@ -2,8 +2,8 @@ name: Terraform Plan Review
 
 on:
   push:
-    branches:
-      - '!master'
+    branches-ignore:
+      - 'master'
   pull_request:
 
 # We are passing service account json key secret in GOOGLE_CREDENTIALS
